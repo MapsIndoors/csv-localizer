@@ -101,19 +101,19 @@ def generate_keys(source_path, output, platform, delimiter):
               if platform == "android":
                 lang_path = os.path.join(base_out_dir, "values-{0}/".format(lang))
 
-              if platform == "json":
-                lang_path = os.path.join(base_out_dir, "{0}/".format(lang))
+              # if platform == "json":
+              #   lang_path = os.path.join(base_out_dir, "{0}/".format(lang))
 
               # Generate directory per language key
-              if not os.path.exists(lang_path):
-                os.makedirs(lang_path)
+              # if not os.path.exists(lang_path):
+              #   os.makedirs(lang_path)
 
         if platform == "ios":
           full_out_paths = [os.path.join(base_out_dir, "{0}.lproj/".format(langKey) + "Localizable.strings") for langKey in LANG_KEYS]
         if platform == "android":
           full_out_paths = [os.path.join(base_out_dir, "values-{0}/".format(langKey) + "strings.xml") for langKey in LANG_KEYS]
         if platform == "json":
-          full_out_paths = [os.path.join(base_out_dir, "{0}/".format(langKey) + "{0}.json".format(langKey)) for langKey in LANG_KEYS]
+          full_out_paths = [os.path.join("{0}.json".format(langKey)) for langKey in LANG_KEYS]
 
       allwrites = [open(out_path, 'w') for out_path in full_out_paths]
 
@@ -210,6 +210,7 @@ def start_localize_android(source_path, all_writes, lang_keys, delimiter):
 # =========================================================================
 def start_localize_json(source_path, all_writes, lang_keys, delimiter):
   allwrites = all_writes
+
   [fwrite.write('{') for fwrite in allwrites]
 
   for dirname, dirnames, filenames in os.walk(source_path):
