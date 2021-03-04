@@ -20,7 +20,7 @@ def main(args, loglevel):
 
   print('\n')
   logging.info("Start Localizing .... ")
-  pprint('\n')
+  print('\n')
   logging.info("------------------------------------")
 
   # check source path
