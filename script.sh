@@ -1,31 +1,63 @@
 #!/bin/bash
 
-readonly FILE="test"
+readonly FILE="csv-localizer"
+readonly FILES=(*.json)
+readonly CSV_FILE=(*.csv)
 readonly MISC_FILES=""
+CLEANUP_ANSWER=""
 
-curl https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o test
+printf "Fetching csv localization tool...\n"
+
+curl -sS https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o test
 chmod +x $FILE
-python $FILE -p json -i . -o .
 
-# perform cleanup
-rm -rf ./output
-rm $FILE
+printf "Running localization tool...\n"
 
-# Option: remove csv file when tool is done
-# Option: verbose - show which files were generated
+function generate_json() {
+    RED="\033[0;31m"
+    SUCCESS="\033[1;32m"
+    NC="\033[0m" # No Color
+    COMPLETE_STMT="${SUCCESS}Cleanup complete.${NC}\n"
 
-# if [ "$1" == "-d" ] || [ "$1" == "--delete" ]; then
-#   DEL_COUNT=0
+    python $FILE -p json -i . -o .
+    sleep 0.1
 
-#   for item in "${FILES[@]}"; do
-#     ele="$(basename $item)"
+    if [ $? == 0 ]; then
+        printf "\n${SUCCESS}Done${NC}\n\n"
 
-#     if [ ${ele: -4} != ".pdf" ] && [ ${ele: -4} != ".log" ]; then
-#       printf "Deleting $ele file...\n"
-#       let DEL_COUNT=$DEL_COUNT+1
-#       rm $item
-#     fi
-#   done
+        printf "Generated files:\n"
+        for file in ${FILES[@]}; do
+            printf -- "- ${file}\n"
+        done
 
-#   printf "\nTotal files deleted: $DEL_COUNT\n\n"
-# fi
+        # perform cleanup
+        printf "\nRunning cleanup...\n"
+        printf -- "- Deleted /output\n"
+        rm -rf ./output
+        printf -- "- Deleted '${FILE}' script\n"
+        # rm "${FILE}"
+
+        printf "\n"
+
+        read -p "Would you like to delete '${CSV_FILE}'? [y/n] " CLEANUP_ANSWER
+
+        while [ ${CLEANUP_ANSWER} != "y" ] || [ ${CLEANUP_ANSWER} != "n" ]; do
+
+            if [ $CLEANUP_ANSWER == "y" ]; then
+                rm "${CSV_FILE}"
+                printf "\nDeleted '${CSV_FILE}'\n"
+                printf "${SUCCESS}Cleanup complete.${NC}\n"
+                break
+            elif [ ${CLEANUP_ANSWER} == "n" ]; then
+                break
+            else
+                read -p "Please specify yes or no [y/n]: " CLEANUP_ANSWER
+            fi
+        done
+    else 
+        printf "${RED}Something went wrong during localization. Exiting.${NC}\n"
+        printf "\nPlease check that you have one csv file only.\n"
+    fi
+}
+
+generate_json

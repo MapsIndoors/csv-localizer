@@ -5,7 +5,7 @@ PLATFORM = None
 IN_PATH = None
 OUT_PATH = None
 DELIMITER = None
-LANG_KEYS = None  # static will change later
+LANG_KEYS = []
 
 # Gather our code in a main() function
 def main(args, loglevel):
@@ -17,11 +17,6 @@ def main(args, loglevel):
 
   # check DELIMITER
   if args.delimiter == None : DELIMITER = ','
-
-  print('\n')
-  logging.info("Start Localizing .... ")
-  print('\n')
-  logging.info("------------------------------------")
 
   # check source path
   logging.debug("\n")
@@ -64,14 +59,13 @@ def main(args, loglevel):
     logging.warn("Invalid platform, platform should be ios, android, json only")
     logging.debug("\n")
     logging.error('ERROR LOCALIZING.\n')
-    return
 
-  logging.info("Generated output directory: %s" % OUTPUT_DIR)
+    return sys.exit(1)
+
   generate_keys(IN_PATH, OUTPUT_DIR, PLATFORM, DELIMITER)
-  print('\n')
-  logging.info("DONE LOCALIZING.\n")
 
 def generate_keys(source_path, output, platform, delimiter):
+  global LANG_KEYS
   base_out_dir = output
   full_out_paths = None
   allwrites = None
@@ -122,6 +116,10 @@ def generate_keys(source_path, output, platform, delimiter):
   if platform == "android":
     start_localize_android(source_path, allwrites, LANG_KEYS, delimiter)
   if platform == "json":
+    if len(LANG_KEYS) == 0:
+
+      return sys.exit(1)
+    
     start_localize_json(source_path, allwrites, LANG_KEYS, delimiter)
 
 
@@ -211,6 +209,9 @@ def start_localize_android(source_path, all_writes, lang_keys, delimiter):
 def start_localize_json(source_path, all_writes, lang_keys, delimiter):
   allwrites = all_writes
 
+  if allwrites == None:
+    return sys.exit(1)
+
   [fwrite.write('{') for fwrite in allwrites]
 
   for dirname, dirnames, filenames in os.walk(source_path):
@@ -220,7 +221,6 @@ def start_localize_json(source_path, all_writes, lang_keys, delimiter):
         continue
 
       fullpath = os.path.join(dirname, f)
-      logging.info("Localizing: %s to JSON", filename)
 
       current_row = 0
 
@@ -253,6 +253,8 @@ def start_localize_json(source_path, all_writes, lang_keys, delimiter):
              for idx, fwrite in enumerate(allwrites)]
       [fwrite.write('}') for fwrite in allwrites]
   [fwrite.close() for fwrite in allwrites]
+
+  return sys.exit(1)
 
 
 # =========================================================================
