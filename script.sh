@@ -8,7 +8,7 @@ CLEANUP_ANSWER=""
 
 printf "Fetching csv localization tool...\n"
 
-curl -sS https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o $FILE
+curl -S https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o $FILE
 chmod +x $FILE
 
 printf "Running localization tool...\n"
