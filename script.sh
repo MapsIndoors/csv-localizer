@@ -8,7 +8,7 @@ CLEANUP_ANSWER=""
 
 printf "Fetching csv localization tool...\n"
 
-curl -sS https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o test
+curl -sS https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o $FILE
 chmod +x $FILE
 
 printf "Running localization tool...\n"
@@ -16,7 +16,7 @@ printf "Running localization tool...\n"
 function generate_json() {
     RED="\033[0;31m"
     SUCCESS="\033[1;32m"
-    NC="\033[0m" # No Color
+    NC="\033[0m"
     COMPLETE_STMT="${SUCCESS}Cleanup complete.${NC}\n"
 
     python $FILE -p json -i . -o .
@@ -30,7 +30,7 @@ function generate_json() {
             printf -- "- ${file}\n"
         done
 
-        # perform cleanup
+        # Perform cleanup
         printf "\nRunning cleanup...\n"
         printf -- "- Deleted /output\n"
         rm -rf ./output
@@ -54,9 +54,9 @@ function generate_json() {
                 read -p "Please specify yes or no [y/n]: " CLEANUP_ANSWER
             fi
         done
-    else 
+    else
         printf "${RED}Something went wrong during localization. Exiting.${NC}\n"
-        printf "\nPlease check that you have one csv file only.\n"
+        printf "\nPlease check that you only have one csv file in the current directory.\n"
     fi
 }
 
