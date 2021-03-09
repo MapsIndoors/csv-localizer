@@ -41,12 +41,11 @@ function generate_json() {
 
         read -p "Would you like to delete '${CSV_FILE}'? [y/n] " CLEANUP_ANSWER
 
-        while [ ${CLEANUP_ANSWER} != "y" ] || [ ${CLEANUP_ANSWER} != "n" ]; do
+        while [[ ${CLEANUP_ANSWER} != "y" ]] || [[ ${CLEANUP_ANSWER} != "n" ]]; do
 
             if [ $CLEANUP_ANSWER == "y" ]; then
                 rm "${CSV_FILE}"
                 printf "\nDeleted '${CSV_FILE}'\n"
-                printf "${SUCCESS}Cleanup complete.${NC}\n"
                 break
             elif [ ${CLEANUP_ANSWER} == "n" ]; then
                 break
@@ -54,6 +53,8 @@ function generate_json() {
                 read -p "Please specify yes or no [y/n]: " CLEANUP_ANSWER
             fi
         done
+
+        printf "${SUCCESS}Cleanup complete.${NC}\n"
     else
         printf "${RED}Something went wrong during localization. Exiting.${NC}\n"
         printf "\nPlease check that you only have one csv file in the current directory.\n"
