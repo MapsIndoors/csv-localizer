@@ -46,7 +46,7 @@ function generate_json() {
                 rm "${CSV_FILE}"
                 printf "\nDeleted '${CSV_FILE}'\n"
                 break
-            elif [ ${CLEANUP_ANSWER} == "n" ]; then
+            elif [[ $CLEANUP_ANSWER == "n" ]]; then
                 break
             else
                 read -p "Please specify yes or no [y/n]: " CLEANUP_ANSWER
