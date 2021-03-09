@@ -41,7 +41,7 @@ function generate_json() {
 
         read -p "Would you like to delete '${CSV_FILE}'? [y/n] " CLEANUP_ANSWER
 
-        while [[ ${CLEANUP_ANSWER} != "y" ]] || [[ ${CLEANUP_ANSWER} != "n" ]]; do
+        while [[ $CLEANUP_ANSWER != "y" ]] || [[ $CLEANUP_ANSWER != "n" ]]; do
             if [[ $CLEANUP_ANSWER == "y" ]]; then
                 rm "${CSV_FILE}"
                 printf "\nDeleted '${CSV_FILE}'\n"
