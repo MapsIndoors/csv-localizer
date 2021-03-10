@@ -23,14 +23,14 @@ function generate_json() {
     sleep 0.1
 
     if [ $? == 0 ]; then
-        file_count=0
+        COUNTER=0
 
         printf "${SUCCESS}Done${NC}\n\n"
 
         printf "Generated files:\n"
         for file in ${FILES[@]}; do
-            let "file_count+=1"
-            printf -- "- ${file} ($file_count)\n"
+            let COUNTER++
+            printf -- "- ${file} ($COUNTER)\n"
         done
 
         # Perform cleanup
