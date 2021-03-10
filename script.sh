@@ -1,25 +1,25 @@
 #!/bin/bash
 
-readonly FILE="csv-localizer"
+readonly TOOL="csv-localizer"
 readonly FILES=(*.json)
 readonly CSV_FILE=(*.csv)
 readonly MISC_FILES=""
 CLEANUP_ANSWER=""
 
-printf "Fetching csv localization tool...\n"
-
-curl -sS https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o $FILE
-chmod +x $FILE
-
-printf "Running localization tool...\n"
-
 function generate_json() {
+    printf "Fetching csv localization tool...\n"
+
+    curl -sS https://raw.githubusercontent.com/MapsIndoors/csv-localizer/modify-script-json/csv-localizer -o $TOOL
+    chmod +x $TOOL
+
+    printf "Running localization tool...\n"
+
     RED="\033[0;31m"
     SUCCESS="\033[1;32m"
     NC="\033[0m"
     COMPLETE_STMT="${SUCCESS}Cleanup complete.${NC}\n"
 
-    python $FILE -p json -i . -o .
+    python $TOOL -p json -i . -o .
     sleep 0.1
 
     if [ $? == 0 ]; then
@@ -31,11 +31,10 @@ function generate_json() {
         done
 
         # Perform cleanup
-        printf "\nRunning cleanup...\n"
-        printf -- "- Deleted /output\n"
+        printf "\nCleanup procedure:\n"
+        printf -- "- %-25s %s\n" "/output" "(deleted)" "${TOOL}" "(deleted)"
         rm -rf ./output
-        printf -- "- Deleted '${FILE}' script\n"
-        rm "${FILE}"
+        rm "${TOOL}"
 
         printf "\n"
 
@@ -56,8 +55,17 @@ function generate_json() {
         printf "${SUCCESS}Cleanup complete.${NC}\n"
     else
         printf "${RED}Something went wrong during localization. Exiting.${NC}\n"
-        printf "\nPlease check that you only have one csv file in the current directory.\n"
+        # printf "\nPlease check that you only have one csv file in the current directory.\n"
     fi
 }
 
-generate_json
+function short_circuit() {
+    # Check if there's a csv file in the current directory.
+    if [[ $CSV_FILE == "*.csv" ]]; then
+        printf "No csv file detected. Tool cancelled.\n"
+    else
+        generate_json
+    fi
+}
+
+short_circuit
