@@ -23,7 +23,7 @@ function generate_json() {
     sleep 0.1
 
     if [ $? == 0 ]; then
-        file_count = 0
+        file_count=0
 
         printf "${SUCCESS}Done${NC}\n\n"
 
