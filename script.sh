@@ -35,7 +35,7 @@ function generate_json() {
         printf -- "- Deleted /output\n"
         rm -rf ./output
         printf -- "- Deleted '${FILE}' script\n"
-        # rm "${FILE}"
+        rm "${FILE}"
 
         printf "\n"
 
